@@ -24,10 +24,12 @@
 
 ## Fonctionnalités
 
+- Page d'accueil avec stats et dernières sorties de personnages
 - Catalogue de personnages avec filtres (élément, type d'arme, région, rareté)
+- Compteur de résultats dynamique selon les filtres appliqués
+- Thème clair / sombre persistant (localStorage)
 - Fiche de build par personnage *(en cours)*
 - Catalogue d'armes *(à venir)*
-- Thème clair / sombre
 
 ---
 
@@ -51,13 +53,21 @@ cd akasha-records
 
 Créer une base PostgreSQL et exécuter les scripts SQL disponibles dans la documentation Notion du projet.
 
-Renseigner la chaîne de connexion dans `appsettings.json` :
+> ⚠️ Le fichier `appsettings.json` n'est pas inclus dans le dépôt (données sensibles).
+> Créer le fichier à la racine du projet avec le contenu suivant :
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Database=GenshinNexus;Username=xxx;Password=xxx"
-  }
+    "DefaultConnection": "Host=localhost;Port=5432;Database=AkashaRecords;Username=xxx;Password=xxx"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
 }
 ```
 
@@ -74,16 +84,17 @@ L'application est accessible sur `https://localhost:5001`.
 ## Structure du projet
 
 ```
-GenshinNexus/
+AkashaRecords/
 ├── Controllers/                  # Logique de routage et d'orchestration
 ├── Data/
 │   └── Repositories/             # Accès base de données (Dapper)
 │       ├── CharacterRepo/
-│       ├── ElementRepo/
-│       ├── RegionRepo/
-│       └── WeaponTypeRepo/
+│       ├── ReferenceRepo/        # Éléments, régions, types d'armes, rôles
+│       ├── WeaponRepo/
+│       └── BuildRepo/
+├── Helpers/                      # Utilitaires (ImageHelper, CharacterHelper)
 ├── Models/
-│   ├── ProjectModels/            # Entités métier (Character, Element, etc.)
+│   ├── ProjectModels/            # Entités métier (Character, Weapon, Build, etc.)
 │   └── ViewModels/               # Modèles dédiés aux vues
 ├── Views/
 │   ├── Character/
@@ -91,7 +102,13 @@ GenshinNexus/
 │   └── Shared/                   # Layout, ViewImports, ViewStart
 └── wwwroot/
     ├── css/                      # Feuilles de style
-    ├── images/                   # Assets visuels (personnages, éléments, régions, armes)
+    ├── images/                   # Assets visuels
+    │   ├── characters/
+    │   ├── elements/
+    │   ├── regions/
+    │   ├── weapon_types/
+    │   ├── weapons/
+    │   └── artifacts/
     └── js/                       # Scripts
 ```
 
