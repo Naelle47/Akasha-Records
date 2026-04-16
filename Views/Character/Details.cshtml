@@ -7,6 +7,13 @@
 
 <div class="details-page">
 
+    <div class="details-back">
+        <a asp-controller="Character" asp-action="Index" class="btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i>
+            Retour aux personnages
+        </a>
+    </div>
+
     @* =====================
        EN-TÊTE PERSONNAGE
        ===================== *@
@@ -17,43 +24,32 @@
 
         <div class="details-character-info">
             <h1 class="details-character-name">@Model.Character.Name</h1>
-
             <div class="details-character-meta">
                 <span class="rarity-badge @(Model.Character.Rarity == 5 ? "rarity-5" : "rarity-4")">
                     @CharacterHelper.RarityStars(Model.Character.Rarity)
                 </span>
-
                 @if (Model.Character.Element != null)
                 {
                     <span class="details-meta-item">
                         <img src="@ImageHelper.ElementIcon(Model.Character.Element.IconUrl)"
-                             alt="@Model.Character.Element.Name"
-                             class="filter-icon" />
+                             alt="@Model.Character.Element.Name" class="filter-icon" />
                         @Model.Character.Element.Name
                     </span>
                 }
-
                 <span class="details-meta-item">
-                    @if (Model.Character.WeaponType != null)
-                    {
-                        <img src="@ImageHelper.WeaponTypeIcon(Model.Character.WeaponType.IconUrl)"
-                             alt="@Model.Character.WeaponType.Name"
-                             class="filter-icon" />
-                        @Model.Character.WeaponType.Name
-                    }
+                    <img src="@ImageHelper.WeaponTypeIcon(Model.Character.WeaponType.IconUrl)"
+                         alt="@Model.Character.WeaponType.Name" class="filter-icon" />
+                    @Model.Character.WeaponType.Name
                 </span>
-
                 @if (Model.Character.Region != null)
                 {
                     <span class="details-meta-item">
                         <img src="@ImageHelper.RegionIcon(Model.Character.Region.IconUrl)"
-                             alt="@Model.Character.Region.Name"
-                             class="filter-icon" />
+                             alt="@Model.Character.Region.Name" class="filter-icon" />
                         @Model.Character.Region.Name
                     </span>
                 }
-
-                <span class="details-meta-item details-release-date">
+                <span class="details-meta-item">
                     <i class="fa-regular fa-calendar"></i>
                     @CharacterHelper.FormatReleaseDate(Model.Character.ReleaseDate)
                 </span>
@@ -63,7 +59,6 @@
 
     @* =====================
        SECTION BUILDS
-       Placeholder — à implémenter via BuildRepo
        ===================== *@
     <section class="details-builds">
         <h2 class="section-title">Builds</h2>
@@ -77,7 +72,107 @@
         }
         else
         {
-            @* TODO : afficher les builds quand BuildRepo est implémenté *@
+            @foreach (var build in Model.Builds)
+            {
+                <div class="build-card">
+
+                    @* En-tête du build : nom + rôle *@
+                    <div class="build-card-header">
+                        <span class="build-name">@build.Name</span>
+                        <span class="build-role">@build.Role.Name</span>
+                    </div>
+
+                    <div class="build-card-body">
+
+                        @* Colonne gauche : armes *@
+                        <div class="build-section">
+                            <h3 class="build-section-title">Armes recommandées</h3>
+                            @foreach (var bw in build.Weapons.OrderBy(w => w.Priority))
+                            {
+                                <div class="build-weapon-row">
+                                    <span class="build-priority">@bw.Priority</span>
+                                    <img src="@ImageHelper.WeaponIcon(bw.Weapon.IconUrl)"
+                                         alt="@bw.Weapon.Name"
+                                         class="build-item-icon" />
+                                    <div class="build-item-info">
+                                        <span class="build-item-name">@bw.Weapon.Name</span>
+                                        <span class="rarity-badge @(bw.Weapon.Rarity == 5 ? "rarity-5" : "rarity-4")">
+                                            @CharacterHelper.RarityStars(bw.Weapon.Rarity)
+                                        </span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(bw.Note))
+                                    {
+                                        <span class="build-item-note">@bw.Note</span>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        @* Colonne droite : artefacts *@
+                        <div class="build-section">
+                            <h3 class="build-section-title">Sets d'artefacts</h3>
+
+                            @* Groupement par priorité *@
+                            @foreach (var group in build.Artifacts.GroupBy(a => a.Priority).OrderBy(g => g.Key))
+                            {
+                                <div class="build-artifact-group">
+                                    @foreach (var ba in group.OrderBy(a => a.ComboGroup).ThenBy(a => a.ArtifactId))
+                                    {
+                                        <div class="build-artifact-row">
+                                            <img src="@ImageHelper.ArtifactIcon(ba.Artifact.IconUrl)"
+                                                 alt="@ba.Artifact.Name"
+                                                 class="build-item-icon" />
+                                            <div class="build-item-info">
+                                                <span class="build-item-name">@ba.Artifact.Name</span>
+                                                <span class="build-piece-count">@ba.PieceCount&#x2715;</span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+
+                    @* Stats *@
+                    <div class="build-stats">
+
+                        <div class="build-stats-section">
+                            <h3 class="build-section-title">Stats principales</h3>
+                            @foreach (var slot in new[] { "Sands", "Goblet", "Circlet" })
+                            {
+                                var stats = build.MainStats
+                                    .Where(s => s.Slot == slot)
+                                    .OrderBy(s => s.Priority)
+                                    .ToList();
+
+                                if (stats.Any())
+                                {
+                                    <div class="build-stat-row">
+                                        <span class="build-stat-slot">@slot</span>
+                                        <span class="build-stat-value">
+                                            @string.Join(" / ", stats.Select(s => s.Stat))
+                                        </span>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <div class="build-stats-section">
+                            <h3 class="build-section-title">Sous-stats</h3>
+                            @foreach (var sub in build.SubStats.OrderBy(s => s.Priority))
+                            {
+                                <div class="build-stat-row">
+                                    <span class="build-stat-priority">@sub.Priority.</span>
+                                    <span class="build-stat-value">@sub.Stat</span>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+            }
         }
     </section>
 

@@ -1,4 +1,5 @@
-﻿using AkashaRecords.Data.Repositories.CharacterRepo;
+﻿using AkashaRecords.Data.Repositories.BuildRepo;
+using AkashaRecords.Data.Repositories.CharacterRepo;
 using AkashaRecords.Data.Repositories.ReferenceRepo;
 using AkashaRecords.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,16 @@ public class CharacterController : Controller
 {
     private readonly ICharacterRepository _characterRepo;
     private readonly IReferenceRepository _referenceRepo;
+    private readonly IBuildRepository _buildRepo;
 
     /// <summary>
     /// Initialise le contrôleur avec les repositories nécessaires via injection de dépendances.
     /// </summary>
-    public CharacterController(ICharacterRepository characterRepo, IReferenceRepository referenceRepo)
+    public CharacterController(ICharacterRepository characterRepo, IReferenceRepository referenceRepo, IBuildRepository buildRepo)
     {
         _characterRepo = characterRepo;
         _referenceRepo = referenceRepo;
+        _buildRepo = buildRepo;
     }
 
     /// <summary>
@@ -66,8 +69,8 @@ public class CharacterController : Controller
 
         var vm = new CharacterDetailsVM
         {
-            Character = character
-            // Builds : à alimenter via BuildRepo quand implémenté
+            Character = character,
+            Builds = (await _buildRepo.GetByCharacterIdAsync(id)).ToList()
         };
 
         return View(vm);

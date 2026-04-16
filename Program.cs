@@ -1,3 +1,4 @@
+using AkashaRecords.Data.Repositories.BuildRepo;
 using AkashaRecords.Data.Repositories.CharacterRepo;
 using AkashaRecords.Data.Repositories.ReferenceRepo;
 using Npgsql;
@@ -21,6 +22,7 @@ builder.Services.AddScoped<IDbConnection>(_ =>
 // -------------------------
 builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
 builder.Services.AddScoped<IReferenceRepository, ReferenceRepository>();
+builder.Services.AddScoped<IBuildRepository, BuildRepository>();
 
 builder.Services.AddControllersWithViews();
 

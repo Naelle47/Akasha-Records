@@ -700,3 +700,197 @@ body {
 .details-builds {
     margin-top: 1rem;
 }
+
+/* ========== Build cards ========== */
+.build-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.build-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(15, 23, 42, 0.04);
+}
+
+.theme-dark .build-card-header {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.build-name {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.build-role {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #0b1120;
+}
+
+.build-card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem;
+}
+
+.build-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+/* Armes */
+.build-weapon-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+    .build-weapon-row:last-child {
+        border-bottom: none;
+    }
+
+.build-priority {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    flex: 0 0 16px;
+    text-align: center;
+}
+
+.build-item-icon {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.build-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.build-item-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.build-item-note {
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+}
+
+/* Artefacts */
+.build-artifact-group {
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.build-artifact-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.3rem 0;
+}
+
+.build-piece-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* Stats */
+.build-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding: 1rem 1.25rem 1.25rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.build-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    padding: 0.2rem 0;
+}
+
+.build-stat-slot {
+    color: var(--text-muted);
+    flex: 0 0 60px;
+    font-weight: 500;
+}
+
+.build-stat-priority {
+    color: var(--text-muted);
+    flex: 0 0 16px;
+}
+
+.build-stat-value {
+    font-weight: 500;
+}
+
+/* ========== Scroll to top ========== */
+
+.scroll-top-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #0b1120;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+    .scroll-top-btn.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .scroll-top-btn:hover {
+        background: var(--accent-strong);
+        transform: translateY(-2px);
+    }
+
+/* ========== Details back button ========== */
+.details-back {
+    margin-bottom: 1.25rem;
+}

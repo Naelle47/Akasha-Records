@@ -8,12 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Repositories\BuildRepo\" />
     <Folder Include="Data\Repositories\WeaponRepo\" />
     <Folder Include="wwwroot\images\artifacts\" />
 	<Folder Include="wwwroot\images\characters\" />
 	<Folder Include="wwwroot\images\elements\" />
-	<Folder Include="wwwroot\images\regions\" />
 	<Folder Include="wwwroot\images\weapon_types\" />
     <Folder Include="wwwroot\images\weapons\" />
   </ItemGroup>
