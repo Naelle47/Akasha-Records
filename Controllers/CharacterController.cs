@@ -64,6 +64,12 @@ public class CharacterController : Controller
         if (character is null)
             return NotFound();
 
-        return View(character);
+        var vm = new CharacterDetailsVM
+        {
+            Character = character
+            // Builds : à alimenter via BuildRepo quand implémenté
+        };
+
+        return View(vm);
     }
 }

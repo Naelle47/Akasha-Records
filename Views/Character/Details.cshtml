@@ -1,0 +1,84 @@
+﻿@model AkashaRecords.Models.ViewModels.CharacterDetailsVM
+@using AkashaRecords.Helpers
+
+@{
+    ViewData["Title"] = Model.Character.Name;
+}
+
+<div class="details-page">
+
+    @* =====================
+       EN-TÊTE PERSONNAGE
+       ===================== *@
+    <div class="details-header">
+        <img src="@ImageHelper.CharacterIcon(Model.Character.IconUrl)"
+             alt="@Model.Character.Name"
+             class="details-character-image" />
+
+        <div class="details-character-info">
+            <h1 class="details-character-name">@Model.Character.Name</h1>
+
+            <div class="details-character-meta">
+                <span class="rarity-badge @(Model.Character.Rarity == 5 ? "rarity-5" : "rarity-4")">
+                    @CharacterHelper.RarityStars(Model.Character.Rarity)
+                </span>
+
+                @if (Model.Character.Element != null)
+                {
+                    <span class="details-meta-item">
+                        <img src="@ImageHelper.ElementIcon(Model.Character.Element.IconUrl)"
+                             alt="@Model.Character.Element.Name"
+                             class="filter-icon" />
+                        @Model.Character.Element.Name
+                    </span>
+                }
+
+                <span class="details-meta-item">
+                    @if (Model.Character.WeaponType != null)
+                    {
+                        <img src="@ImageHelper.WeaponTypeIcon(Model.Character.WeaponType.IconUrl)"
+                             alt="@Model.Character.WeaponType.Name"
+                             class="filter-icon" />
+                        @Model.Character.WeaponType.Name
+                    }
+                </span>
+
+                @if (Model.Character.Region != null)
+                {
+                    <span class="details-meta-item">
+                        <img src="@ImageHelper.RegionIcon(Model.Character.Region.IconUrl)"
+                             alt="@Model.Character.Region.Name"
+                             class="filter-icon" />
+                        @Model.Character.Region.Name
+                    </span>
+                }
+
+                <span class="details-meta-item details-release-date">
+                    <i class="fa-regular fa-calendar"></i>
+                    @CharacterHelper.FormatReleaseDate(Model.Character.ReleaseDate)
+                </span>
+            </div>
+        </div>
+    </div>
+
+    @* =====================
+       SECTION BUILDS
+       Placeholder — à implémenter via BuildRepo
+       ===================== *@
+    <section class="details-builds">
+        <h2 class="section-title">Builds</h2>
+
+        @if (!Model.Builds.Any())
+        {
+            <div class="placeholder-block">
+                <i class="fa-solid fa-book-open"></i>
+                <p>Aucun build documenté pour ce personnage.</p>
+            </div>
+        }
+        else
+        {
+            @* TODO : afficher les builds quand BuildRepo est implémenté *@
+        }
+    </section>
+
+</div>
