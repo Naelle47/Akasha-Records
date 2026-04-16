@@ -1,0 +1,121 @@
+﻿@model IReadOnlyList<AkashaRecords.Models.ProjectModels.Character>
+@using AkashaRecords.Helpers
+
+@{
+    ViewData["Title"] = "Accueil";
+}
+
+@* =====================
+   SECTION STATS
+   Valeurs hardcodées pour l'instant — à brancher sur IStatsRepository
+   ===================== *@
+<section class="home-stats">
+    <div class="stat-card">
+        <span class="stat-value">@Model.Count()</span>
+        <span class="stat-label">Personnages</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">—</span>
+        <span class="stat-label">Armes</span>
+    </div>
+    <div class="stat-card">
+        <span class="stat-value">—</span>
+        <span class="stat-label">Builds documentés</span>
+    </div>
+</section>
+
+@* =====================
+   SECTION DERNIÈRES SORTIES
+   Les 6 derniers personnages ajoutés, triés par date de sortie
+   ===================== *@
+<section class="home-section">
+    <h2 class="section-title">Dernières sorties</h2>
+    <div class="characters-grid">
+        @foreach (var c in Model)
+        {
+            <article class="character-card">
+                <img src="@ImageHelper.CharacterIcon(c.IconUrl)"
+                     alt="@c.Name"
+                     class="character-card-image" />
+
+                <div class="character-card-body">
+                    <h3 class="character-name">@c.Name</h3>
+                    <div class="character-fields">
+
+                        <div class="field-row">
+                            <span class="field-label">Rareté</span>
+                            <span class="field-value">
+                                <span class="rarity-badge @(c.Rarity == 5 ? "rarity-5" : "rarity-4")">
+                                    @CharacterHelper.RarityStars(c.Rarity)
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="field-row">
+                            <span class="field-label">Élément</span>
+                            <span class="field-value">
+                                @if (c.Element != null)
+                                {
+                                    <img src="@ImageHelper.ElementIcon(c.Element.IconUrl)"
+                                         alt="@c.Element.Name"
+                                         class="filter-icon" />
+                                    @c.Element.Name
+                                }
+                                else
+                                {
+                                    @:N/A
+                                }
+                            </span>
+                        </div>
+
+                        <div class="field-row">
+                            <span class="field-label">Arme</span>
+                            <span class="field-value">
+                                @if (c.WeaponType != null)
+                                {
+                                    <img src="@ImageHelper.WeaponTypeIcon(c.WeaponType.IconUrl)"
+                                         alt="@c.WeaponType.Name"
+                                         class="filter-icon" />
+                                    @c.WeaponType.Name
+                                }
+                                else
+                                {
+                                    @:N/A
+                                }
+                            </span>
+                        </div>
+
+                        <div class="field-row">
+                            <span class="field-label">Sortie</span>
+                            <span class="field-value">
+                                @CharacterHelper.FormatReleaseDate(c.ReleaseDate)
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="character-card-footer">
+                        <a asp-controller="Character"
+                               asp-action="Details"
+                               asp-route-id="@c.Id"
+                               class="btn-primary-sm">
+                            Voir la fiche
+                        </a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+</section>
+
+@* =====================
+   SECTION DERNIERS BUILDS
+   Placeholder — à implémenter une fois BuildRepo disponible
+   ===================== *@
+<section class="home-section">
+    <h2 class="section-title">Derniers builds</h2>
+    <div class="placeholder-block">
+        <i class="fa-solid fa-book-open"></i>
+        <p>Les fiches de builds arrivent bientôt.</p>
+    </div>
+</section>

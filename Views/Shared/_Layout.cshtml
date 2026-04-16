@@ -1,0 +1,107 @@
+﻿@* 
+    Layout principal — Akasha Records
+    Structure : sidebar fixe + contenu principal
+    Thème clair/sombre via classe .theme-dark sur <html>
+*@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Akasha Records</title>
+
+    @* Fonts *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    @* Icônes *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    @* CSS *@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+    <div class="layout">
+
+        @* =====================
+       SIDEBAR
+       ===================== *@
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Akasha Records</span>
+                </div>
+
+                @* Bouton switch thème *@
+                <button class="theme-toggle" id="theme-toggle" aria-label="Changer de thème">
+                    <i class="fa-solid fa-sun icon-light"></i>
+                    <i class="fa-solid fa-moon icon-dark"></i>
+                </button>
+            </div>
+
+            @* Navigation principale *@
+            <nav class="sidebar-nav">
+                <a asp-controller="Home" asp-action="Index"
+                       class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Accueil</span>
+                </a>
+                <a asp-controller="Character" asp-action="Index"
+                       class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Character" ? "active" : "")">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Personnages</span>
+                </a>
+            </nav>
+
+            @* Footer sidebar *@
+            <div class="sidebar-footer">
+                <a asp-controller="Home" asp-action="Privacy" class="nav-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Confidentialité</span>
+                </a>
+                <button class="nav-item nav-button" id="about-open">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>À propos</span>
+                </button>
+            </div>
+        </aside>
+
+        @* =====================
+       CONTENU PRINCIPAL
+       ===================== *@
+        <main class="main">
+            @RenderBody()
+        </main>
+
+    </div>
+
+    @* =====================
+   MODALE À PROPOS
+   ===================== *@
+    <div class="modal" id="about-modal" aria-hidden="true" aria-modal="true" role="dialog">
+        <div class="modal-backdrop"></div>
+        <div class="modal-dialog">
+            <button class="modal-close" id="about-close" aria-label="Fermer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2>À propos</h2>
+            <p>
+                Akasha Records est une référence personnalisée dédiée à Genshin Impact —
+                fiches de builds, catalogue de personnages et d'armes.
+            </p>
+            <p>
+                Projet personnel, sans affiliation avec HoYoverse.
+            </p>
+        </div>
+    </div>
+
+    @* Scripts partagés *@
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

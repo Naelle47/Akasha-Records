@@ -1,0 +1,215 @@
+﻿@model AkashaRecords.Models.ViewModels.CharacterFiltersVM
+@using AkashaRecords.Helpers
+
+@{
+    ViewData["Title"] = "Personnages";
+}
+
+<div class="characters-page">
+
+    <div class="characters-header">
+        <h1>Personnages</h1>
+        <p>@Model.Characters.Count personnage(s) affiché(s)</p>
+    </div>
+
+    @* =====================
+       FILTRES
+       ===================== *@
+    <section class="character-filters">
+
+        @* Rareté *@
+        <div class="filter-row">
+            <span class="filter-label">Rareté</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-elementId="@Model.ElementId"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-regionId="@Model.RegionId"
+                   asp-route-rarity=""
+                   class="filter-chip rarity-chip @(Model.Rarity is null ? "active" : string.Empty)">*</a>
+                <a asp-action="Index"
+                   asp-route-elementId="@Model.ElementId"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-regionId="@Model.RegionId"
+                   asp-route-rarity="4"
+                   class="filter-chip rarity-chip @(Model.Rarity == 4 ? "active" : string.Empty)">4✦</a>
+                <a asp-action="Index"
+                   asp-route-elementId="@Model.ElementId"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-regionId="@Model.RegionId"
+                   asp-route-rarity="5"
+                   class="filter-chip rarity-chip @(Model.Rarity == 5 ? "active" : string.Empty)">5✦</a>
+            </div>
+        </div>
+
+        @* Éléments *@
+        <div class="filter-row">
+            <span class="filter-label">Élément</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-elementId=""
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-regionId="@Model.RegionId"
+                   asp-route-rarity="@Model.Rarity"
+                   class="filter-chip @(Model.ElementId is null ? "active" : string.Empty)">*</a>
+                @foreach (var e in Model.Elements)
+                {
+                    <a asp-action="Index"
+                           asp-route-elementId="@e.Id"
+                           asp-route-weaponTypeId="@Model.WeaponTypeId"
+                           asp-route-regionId="@Model.RegionId"
+                           asp-route-rarity="@Model.Rarity"
+                           class="filter-chip @(Model.ElementId == e.Id ? "active" : string.Empty)">
+                        <img src="@ImageHelper.ElementIcon(e.IconUrl)" alt="@e.Name" class="filter-icon" />
+                    </a>
+                }
+            </div>
+        </div>
+
+        @* Types d'armes *@
+        <div class="filter-row">
+            <span class="filter-label">Arme</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-elementId="@Model.ElementId"
+                   asp-route-weaponTypeId=""
+                   asp-route-regionId="@Model.RegionId"
+                   asp-route-rarity="@Model.Rarity"
+                   class="filter-chip @(Model.WeaponTypeId is null ? "active" : string.Empty)">*</a>
+                @foreach (var w in Model.WeaponTypes)
+                {
+                    <a asp-action="Index"
+                           asp-route-elementId="@Model.ElementId"
+                           asp-route-weaponTypeId="@w.Id"
+                           asp-route-regionId="@Model.RegionId"
+                           asp-route-rarity="@Model.Rarity"
+                           class="filter-chip @(Model.WeaponTypeId == w.Id ? "active" : string.Empty)">
+                        <img src="@ImageHelper.WeaponTypeIcon(w.IconUrl)" alt="@w.Name" class="filter-icon" />
+                    </a>
+                }
+            </div>
+        </div>
+
+        @* Régions *@
+        <div class="filter-row">
+            <span class="filter-label">Région</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-elementId="@Model.ElementId"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-regionId=""
+                   asp-route-rarity="@Model.Rarity"
+                   class="filter-chip @(Model.RegionId is null ? "active" : string.Empty)">*</a>
+                @foreach (var r in Model.Regions)
+                {
+                    <a asp-action="Index"
+                           asp-route-elementId="@Model.ElementId"
+                           asp-route-weaponTypeId="@Model.WeaponTypeId"
+                           asp-route-regionId="@r.Id"
+                           asp-route-rarity="@Model.Rarity"
+                           class="filter-chip @(Model.RegionId == r.Id ? "active" : string.Empty)">
+                        <img src="@ImageHelper.RegionIcon(r.IconUrl)" alt="@r.Name" class="filter-icon" />
+                    </a>
+                }
+            </div>
+        </div>
+
+    </section>
+
+    @* =====================
+       GRILLE PERSONNAGES
+       ===================== *@
+    <div class="characters-grid">
+        @foreach (var c in Model.Characters)
+        {
+            <article class="character-card">
+                <img src="@ImageHelper.CharacterIcon(c.IconUrl)"
+                     alt="@c.Name"
+                     class="character-card-image" />
+
+                <div class="character-card-body">
+                    <div>
+                        <h2 class="character-name">@c.Name</h2>
+                        <div class="character-fields">
+
+                            <div class="field-row">
+                                <span class="field-label">Rareté</span>
+                                <span class="field-value">
+                                    <span class="rarity-badge @(c.Rarity == 5 ? "rarity-5" : "rarity-4")">
+                                        @CharacterHelper.RarityStars(c.Rarity)
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="field-row">
+                                <span class="field-label">Élément</span>
+                                <span class="field-value">
+                                    @if (c.Element != null)
+                                    {
+                                        <img src="@ImageHelper.ElementIcon(c.Element.IconUrl)"
+                                             alt="@c.Element.Name" class="filter-icon" />
+                                        @c.Element.Name
+                                    }
+                                    else
+                                    {
+                                        @:N/A
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="field-row">
+                                <span class="field-label">Arme</span>
+                                <span class="field-value">
+                                    @if (c.WeaponType != null)
+                                    {
+                                        <img src="@ImageHelper.WeaponTypeIcon(c.WeaponType.IconUrl)"
+                                             alt="@c.WeaponType.Name" class="filter-icon" />
+                                        @c.WeaponType.Name
+                                    }
+                                    else
+                                    {
+                                        @:N/A
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="field-row">
+                                <span class="field-label">Région</span>
+                                <span class="field-value">
+                                    @if (c.Region != null)
+                                    {
+                                        <img src="@ImageHelper.RegionIcon(c.Region.IconUrl)"
+                                             alt="@c.Region.Name" class="filter-icon" />
+                                        @c.Region.Name
+                                    }
+                                    else
+                                    {
+                                        @:N/A
+                                    }
+                                </span>
+                            </div>
+
+                            <div class="field-row">
+                                <span class="field-label">Sortie</span>
+                                <span class="field-value">
+                                    @CharacterHelper.FormatReleaseDate(c.ReleaseDate)
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="character-card-footer">
+                        <a asp-controller="Character"
+                               asp-action="Details"
+                               asp-route-id="@c.Id"
+                               class="btn-primary-sm">
+                            Voir la fiche
+                        </a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+
+</div>
