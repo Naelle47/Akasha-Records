@@ -1,4 +1,4 @@
-﻿@model IReadOnlyList<AkashaRecords.Models.ProjectModels.Character>
+﻿@model AkashaRecords.Models.ViewModels.HomeVM
 @using AkashaRecords.Helpers
 
 @{
@@ -7,19 +7,18 @@
 
 @* =====================
    SECTION STATS
-   Valeurs hardcodées pour l'instant — à brancher sur IStatsRepository
    ===================== *@
 <section class="home-stats">
     <div class="stat-card">
-        <span class="stat-value">@Model.Count()</span>
+        <span class="stat-value">@Model.CharacterCount</span>
         <span class="stat-label">Personnages</span>
     </div>
     <div class="stat-card">
-        <span class="stat-value">—</span>
+        <span class="stat-value">@Model.WeaponCount</span>
         <span class="stat-label">Armes</span>
     </div>
     <div class="stat-card">
-        <span class="stat-value">—</span>
+        <span class="stat-value">@Model.BuildCount</span>
         <span class="stat-label">Builds documentés</span>
     </div>
 </section>
@@ -31,7 +30,7 @@
 <section class="home-section">
     <h2 class="section-title">Dernières sorties</h2>
     <div class="characters-grid">
-        @foreach (var c in Model)
+        @foreach (var c in Model.LatestCharacters)
         {
             <article class="character-card">
                 <img src="@ImageHelper.CharacterIcon(c.IconUrl)"
@@ -110,12 +109,35 @@
 
 @* =====================
    SECTION DERNIERS BUILDS
-   Placeholder — à implémenter une fois BuildRepo disponible
    ===================== *@
 <section class="home-section">
     <h2 class="section-title">Derniers builds</h2>
-    <div class="placeholder-block">
-        <i class="fa-solid fa-book-open"></i>
-        <p>Les fiches de builds arrivent bientôt.</p>
-    </div>
+    @if (!Model.LatestBuilds.Any())
+    {
+        <div class="placeholder-block">
+            <i class="fa-solid fa-book-open"></i>
+            <p>Les fiches de builds arrivent bientôt.</p>
+        </div>
+    }
+    else
+    {
+        <div class="builds-grid">
+            @foreach (var build in Model.LatestBuilds)
+            {
+                <a asp-controller="Character"
+                       asp-action="Details"
+                       asp-route-id="@build.CharacterId"
+                       class="build-preview-card">
+                    <img src="@ImageHelper.CharacterIcon(build.Character.IconUrl)"
+                         alt="@build.Character.Name"
+                         class="build-preview-image" />
+                    <div class="build-preview-info">
+                        <span class="build-preview-name">@build.Character.Name</span>
+                        <span class="build-preview-role">@build.Role.Name</span>
+                        <span class="build-preview-build">@build.Name</span>
+                    </div>
+                </a>
+            }
+        </div>
+    }
 </section>

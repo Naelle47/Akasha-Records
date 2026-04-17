@@ -22,7 +22,8 @@ public class BuildRepository : IBuildRepository
         // Étape 1 : récupérer les builds avec leur rôle
         const string sqlBuilds = @"
             SELECT
-                b.id, b.character_id, b.role_id, b.name,
+                b.id, b.character_id, b.role_id, b.name, 
+                b.stat_thresholds, b.stat_goals, 
                 cr.id, cr.name
             FROM builds b
             JOIN character_roles cr ON b.role_id = cr.id
@@ -121,5 +122,37 @@ public class BuildRepository : IBuildRepository
         }
 
         return builds;
+    }
+
+    public async Task<int> GetCountAsync()
+    {
+        const string sql = "SELECT COUNT(*) FROM builds;";
+        return await _db.ExecuteScalarAsync<int>(sql);
+    }
+
+    public async Task<IEnumerable<Build>> GetLatestAsync(int count)
+    {
+        const string sql = @"
+        SELECT
+            b.id, b.character_id, b.role_id, b.name,
+            cr.id, cr.name,
+            c.id, c.name, c.icon_url
+        FROM builds b
+        JOIN character_roles cr ON b.role_id = cr.id
+        JOIN characters c ON b.character_id = c.id
+        ORDER BY b.id DESC
+        LIMIT @Count;";
+
+        return await _db.QueryAsync<Build, CharacterRole, Character, Build>(
+            sql,
+            (build, role, character) =>
+            {
+                build.Role = role;
+                build.Character = character;
+                return build;
+            },
+            new { Count = count },
+            splitOn: "id,id"
+        );
     }
 }

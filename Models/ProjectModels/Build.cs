@@ -11,6 +11,8 @@ public class Build
     public int CharacterId { get; set; }
     public int RoleId { get; set; }
     public string Name { get; set; }
+    public string? StatThresholds { get; set; }
+    public string? StatGoals { get; set; }
 
     // -------------------------
     // Propriétés de navigation

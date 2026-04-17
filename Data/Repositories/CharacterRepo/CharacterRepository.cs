@@ -122,4 +122,10 @@ public class CharacterRepository : ICharacterRepository
 
         return result.FirstOrDefault();
     }
+
+    public async Task<int> GetCountAsync()
+    {
+        const string sql = "SELECT COUNT(*) FROM characters;";
+        return await _db.ExecuteScalarAsync<int>(sql);
+    }
 }

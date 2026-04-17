@@ -12,4 +12,6 @@ public interface IBuildRepository
     /// </summary>
     /// <param name="characterId">Identifiant unique du personnage.</param>
     Task<IEnumerable<Build>> GetByCharacterIdAsync(int characterId);
+    Task<int> GetCountAsync();
+    Task<IEnumerable<Build>> GetLatestAsync(int count);
 }

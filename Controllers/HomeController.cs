@@ -1,4 +1,8 @@
+using Akasha_Records.Models;
+using AkashaRecords.Data.Repositories.BuildRepo;
 using AkashaRecords.Data.Repositories.CharacterRepo;
+using AkashaRecords.Data.Repositories.WeaponRepo;
+using AkashaRecords.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -10,43 +14,41 @@ namespace AkashaRecords.Controllers;
 public class HomeController : Controller
 {
     private readonly ICharacterRepository _characterRepo;
+    private readonly IBuildRepository _buildRepo;
+    private readonly IWeaponRepository _weaponRepo;
 
-    /// <summary>
-    /// Initialise le contrôleur avec le repository des personnages via injection de dépendances.
-    /// </summary>
-    public HomeController(ICharacterRepository characterRepo)
+    public HomeController(
+        ICharacterRepository characterRepo,
+        IBuildRepository buildRepo,
+        IWeaponRepository weaponRepo)
     {
         _characterRepo = characterRepo;
+        _buildRepo = buildRepo;
+        _weaponRepo = weaponRepo;
     }
 
     /// <summary>
-    /// Affiche la page d'accueil avec les 5 derniers personnages ajoutés.
+    /// Page d'accueil — stats globales, dernières sorties et derniers builds.
     /// </summary>
     public async Task<IActionResult> Index()
     {
-        var latest = await _characterRepo.GetLatestAsync(6);
-        return View(latest.ToList());
+        var vm = new HomeVM
+        {
+            CharacterCount = await _characterRepo.GetCountAsync(),
+            WeaponCount = await _weaponRepo.GetCountAsync(),
+            BuildCount = await _buildRepo.GetCountAsync(),
+            LatestCharacters = (await _characterRepo.GetLatestAsync(6)).ToList(),
+            LatestBuilds = (await _buildRepo.GetLatestAsync(3)).ToList()
+        };
+
+        return View(vm);
     }
 
-    /// <summary>
-    /// Affiche la politique de confidentialité.
-    /// À compléter si collecte de données personnelles (auth, emails...).
-    /// </summary>
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+    public IActionResult Privacy() => View();
 
-    /// <summary>
-    /// Affiche la page d'erreur personnalisée.
-    /// </summary>
-    /// <remarks>
-    /// TODO : Personnaliser la vue Error.cshtml avec le design du projet.
-    /// Envisager d'afficher des messages différents selon le code HTTP (404, 500...).
-    /// </remarks>
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult Error() => View(new ErrorViewModel
     {
-        return View();
-    }
+        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+    });
 }
