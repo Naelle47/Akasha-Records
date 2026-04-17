@@ -1,159 +1,61 @@
 # Akasha Records — Roadmap
 
-> Ce fichier recense les améliorations techniques, corrections et fonctionnalités à intégrer.
-> Il sert de référence pour reprendre le projet après une interruption.
+> Akasha Records est une refonte complète de GenshinNexus, repensé de zéro avec une architecture propre.
+> Ce fichier recense ce qui a été accompli et les améliorations à venir.
 
 ---
 
-## 🔄 Reconstruction du projet
+## ✅ Accompli
 
-> Le projet sera reconstruit à neuf en suivant cet ordre de priorité.
-> Le code existant sert de référence — les erreurs identifiées sont documentées ci-dessous.
+### Base de données
+- Schéma PostgreSQL complet : `elements`, `weapon_types`, `regions`, `characters`, `weapons`, `artifacts`, `character_roles`
+- Schéma de builds flexible : `builds`, `build_weapons`, `build_artifacts`, `build_main_stats`, `build_sub_stats`
+- Convention de nommage snake_case cohérente, clés primaires unifiées (`id`)
+- 107 personnages, 197 armes, 42 sets d'artefacts
 
-1. **BDD** — refondre le schéma en partant des tables stables (`characters`, `elements`, `weapon_types`, `regions`, `weapons`, `artifacts`, `characters_roles`) et en intégrant directement `builds`, `build_weapons`, `build_artifacts`, `build_stats`
-2. **Models** — PascalCase dès le départ, mapping Dapper configuré proprement
-3. **Repositories** — `IReferenceRepository` d'emblée, `ICharacterRepository` avec `GetByIdAsync`
-4. **Controllers & Views** — une fois la base de données et les models stabilisés
-5. **Helpers** — intégrés dès le début dans `Helpers/CharacterHelper.cs`
-6. **JS** — organisé dès le départ (`site.js` pour le partagé, fichiers séparés pour le spécifique)
+### Architecture
+- Models en PascalCase avec mapping Dapper automatique (`MatchNamesWithUnderscores`)
+- `IReferenceRepository` regroupant éléments, régions, types d'armes et rôles
+- `ICharacterRepository` avec `GetFilteredAsync`, `GetLatestAsync`, `GetByIdAsync`
+- `IBuildRepository` avec `GetByCharacterIdAsync` (chargement complet armes + artefacts + stats)
+- `ImageHelper` et `CharacterHelper` centralisés
 
----
-
-## 🔧 Dette technique (à corriger en priorité)
-
-### Conventions de nommage
-- [ ] Renommer les propriétés des modèles de `snake_case` vers `PascalCase`
-  (`characterid_pk` → `CharacterId`, `icon_url` → `IconUrl`, etc.)
-- [ ] Configurer le mapping Dapper en conséquence (`DefaultTypeMap` ou annotations)
-
-### JavaScript
-- [ ] Déplacer le script de **gestion du thème clair/sombre** dans `wwwroot/js/site.js`
-- [ ] Déplacer le script de **gestion de la modale "À propos"** dans `wwwroot/js/site.js`
-- [ ] Ne conserver dans les `@section Scripts` des vues que le JS spécifique à la page concernée (ex : slider)
-
-### `using` inutilisés
-- [ ] Supprimer les `using` superflus identifiés dans `CharacterRepository.cs`
-  (`System.Collections`, `System.Reflection.Metadata.Ecma335`)
+### Vues & UI
+- Layout avec sidebar de navigation, thème clair/sombre, modale "À propos"
+- `Home/Index` — stats, grille des dernières sorties, placeholder builds
+- `Character/Index` — catalogue avec filtres (élément, arme, région, rareté) et compteur
+- `Character/Details` — fiche de build complète (armes, artefacts, stats)
+- Cartes personnages horizontales avec image 200×200
+- Scroll to top, bouton retour vers le catalogue
+- Logo et favicon personnalisés
 
 ---
 
-## 🏗️ Architecture & structure
-
-### Repositories
-- [ ] Regrouper `ElementRepo`, `RegionRepo` et `WeaponTypeRepo` dans un unique `IReferenceRepository`
-  Ces trois repositories n'exposent qu'un `GetAll` simple — les maintenir séparément est inutilement verbeux
-
-
-- [ ] Implémenter un middleware d'exception global (`UseExceptionHandler`)
-- [ ] Créer une vue d'erreur personnalisée (`/Views/Shared/Error.cshtml`)
-- [ ] Envisager un filtre d'exception (`IExceptionFilter`) pour les cas spécifiques au niveau des controllers
-- [ ] Logger les erreurs (Serilog ou le logger natif ASP.NET Core)
-
-### Gestion des transactions (Dapper)
-- [ ] Encapsuler les opérations multi-requêtes dans des transactions via `IDbTransaction`
-- [ ] Envisager un pattern **Unit of Work** si le nombre de repositories augmente
-  ```
-  Exemple minimal avec Dapper :
-  using var transaction = _db.BeginTransaction();
-  // ... opérations ...
-  transaction.Commit();
-  ```
-
----
-
-## 📄 Fonctionnalités à implémenter
+## 🏗️ En cours / À venir
 
 ### Court terme
-- [ ] `CharacterController.Details` : implémenter la récupération via `GetByIdAsync`
-  - Ajouter `GetByIdAsync(int id)` dans `ICharacterRepository` et `CharacterRepository`
-  - Gérer le cas `NotFound()` si le personnage n'existe pas
-- [ ] Revoir la page d'accueil (`Home/Index`) : remplacer le slider par une autre mise en page
-  (carousel CSS natif, grille statique, section "à la une", etc. — à définir)
+- [ ] Transformer la note d'arme (ex : "R5 recommandé") en tag visuel dans la vue Details
+- [ ] Vue `Home/Index` — brancher les stats sur la BDD (`GetCountAsync` pour personnages, armes, builds)
+- [ ] Vue d'erreur personnalisée (`/Views/Shared/Error.cshtml`) avec gestion 404 / 500
+- [ ] Alimenter les builds en base au fur et à mesure
 
-### Moyen terme — Fiche de build personnage
-> Angle retenu : **référence personnalisée** (pas un wiki exhaustif)
-> Référence visuelle : genshin.gg/builds
-
-Chaque fiche personnage affichera :
-- Son rôle (Main DPS, Sub DPS, Support...)
-- Les meilleures armes recommandées (ordonnées par priorité)
-- Les meilleurs sets d'artefacts (4pc ou combinaisons 2pc+2pc)
-- Les stats principales à viser (Sands, Goblet, Circlet)
-- Les sous-stats prioritaires
-
-#### État actuel de la base de données
-> Le schéma a été commencé sans conception préalable — une refonte partielle est nécessaire.
-
-Tables déjà en place (✅ à conserver, ⚠️ à revoir) :
-- ✅ `characters`, `elements`, `weapon_types`, `regions`
-- ✅ `weapons` (avec `passive_ability` — bon ajout)
-- ✅ `artifacts` (avec `bonus_2pc` et `bonus_4pc`)
-- ✅ `characters_roles`
-- ⚠️ `char_build` — trop simpliste : une seule `artifactid_fk` et une seule `weaponid_fk`
-  Problèmes identifiés :
-  - Impossible d'afficher plusieurs armes recommandées avec priorité
-  - Impossible de gérer les combos 2pc+2pc d'artefacts
-  - Pas de gestion des stats recommandées (Sands / Goblet / Circlet + sous-stats)
-
-#### Refonte du schéma à prévoir
-- [ ] Remplacer `char_build` par un schéma plus flexible :
-  - `builds` — table centrale (characterid_fk, roleid_fk, build_name)
-  - `build_weapons` — liaison Build ↔ Weapon avec champ `priority`
-  - `build_artifacts` — liaison Build ↔ Artifact avec champ `priority` et `piece_count` (2pc ou 4pc)
-  - `build_stats` — stats recommandées (slot : Sands/Goblet/Circlet, main_stat, sous-stats)
-
-#### Modèles C# à créer (après refonte BDD)
-- [ ] `Weapon.cs`
-- [ ] `Build.cs`
-- [ ] `BuildWeapon.cs` (avec propriété `Priority`)
-- [ ] `BuildArtifact.cs` (avec `Priority` et `PieceCount`)
-- [ ] `BuildStat.cs`
-
-#### Repositories à créer (après refonte BDD)
-- [ ] `IWeaponRepository` / `WeaponRepository`
-- [ ] `IBuildRepository` / `BuildRepository` (requête principale de la fiche)
-
-#### Vue à créer
-- [ ] `Character/Details.cshtml` — fiche de build complète
+### Moyen terme
+- [ ] Gestion centralisée des erreurs — middleware d'exception global (`UseExceptionHandler`)
+- [ ] Logger les erreurs (Serilog ou le logger natif ASP.NET Core)
+- [ ] Gestion des transactions Dapper (`IDbTransaction`) pour les opérations multi-requêtes
+- [ ] Passive abilities des armes (`passive_ability`) — `UPDATE` au fur et à mesure des builds documentés
 
 ### Long terme (si auth implémentée)
-- [ ] Système d'authentification (reporté volontairement)
-  - Option envisagée : ASP.NET Core Identity ou solution OAuth (Google, etc.)
-  - Prérequis avant d'implémenter : stabiliser la base de données et les modèles
-- [ ] Builds personnalisés par utilisateur
-- [ ] Tierlist personnalisée
-- [ ] Suivi de progression (personnages débloqués, constellation, etc.)
+- [ ] Système d'authentification — ASP.NET Core Identity ou OAuth
+  > Prérequis : stabiliser le contenu (builds) avant d'implémenter
+- [ ] Marquer un build existant comme "build utilisé" (référence personnelle, pas création from scratch)
+- [ ] Personnages favoris / sauvegardés
 
 ---
 
-## 📁 Structure cible des fichiers JS
+## 📝 Notes techniques
 
-```
-wwwroot/
-└── js/
-    ├── site.js       ← thème + modale (partagés sur toutes les pages)
-    └── slider.js     ← slider Home/Index (spécifique à cette vue)
-```
-
----
-
-## 🛠️ Helpers à créer
-
-> Emplacement cible : `Helpers/CharacterHelper.cs` (classe statique)
-> Règle : tout formatage ou logique répété dans deux vues ou plus → candidat Helper.
-
-- [ ] `IconUrl(string path)` — encapsule le `Url.Content("~" + path)` répété sur toutes les entités
-- [ ] `RegionIconUrl(Region region)` — encapsule le fallback vers `Emblem_Nation_Unknown_White.png` si `icon_url` est vide
-- [ ] `FormatReleaseDate(DateOnly date)` — encapsule `date == default ? "N/A" : date.ToString("dd MMM yyyy")`
-- [ ] `RarityStars(int rarity)` — basique pour l'instant (`@rarity★`), à enrichir si affichage stylisé souhaité (icônes, couleurs 4★/5★)
-
----
-
-## 📝 Notes diverses
-
-- La convention `IS NULL OR = @Param` dans les requêtes SQL filtrées est intentionnelle :
-  elle permet de gérer tous les cas de filtres avec une seule requête.
-- Le fallback vers `Emblem_Nation_Unknown_White.png` pour les régions sans icône est temporaire :
-  à remplacer quand toutes les régions auront leur icône définie en base.
-- `GetLatestAsync(int count)` : le `count` est actuellement codé en dur à 5 dans le controller.
-  Envisager une constante ou une configuration.
+- La convention `IS NULL OR = @Param` dans les requêtes SQL filtrées est intentionnelle — elle permet de gérer tous les cas de filtres avec une seule requête.
+- `Snezhnaya` n'a pas encore d'icône en base — fallback vers `Unknown.png` jusqu'à la sortie de la région.
+- Les passives d'armes sont `NULL` par défaut — à renseigner via `UPDATE` uniquement pour les armes utilisées dans les builds documentés.
+- Le `combo_group` sur `build_artifacts` permet de regrouper deux sets 2pc formant un combo — même numéro = même combinaison.

@@ -2,6 +2,8 @@
 
 > Référence personnalisée dédiée à Genshin Impact — fiches de builds, catalogue de personnages et d'armes.
 
+Akasha Records est une refonte complète de [GenshinNexus](https://github.com/Naelle47/genshin-nexus), un premier jet fonctionnel mais construit sans conception préalable. Le principe fondamental reste le même — une application de référence centrée sur les builds de personnages — mais l'architecture, le schéma de base de données et les conventions ont été repensés de zéro.
+
 ---
 
 ## Aperçu
@@ -27,9 +29,20 @@
 - Page d'accueil avec stats et dernières sorties de personnages
 - Catalogue de personnages avec filtres (élément, type d'arme, région, rareté)
 - Compteur de résultats dynamique selon les filtres appliqués
+- Fiche de build par personnage — armes recommandées, sets d'artefacts, stats principales et sous-stats
 - Thème clair / sombre persistant (localStorage)
-- Fiche de build par personnage *(en cours)*
 - Catalogue d'armes *(à venir)*
+
+---
+
+## Ce qui a changé par rapport à GenshinNexus
+
+- **BDD** — schéma entièrement refondu : nommage snake_case cohérent, clés primaires unifiées (`id`), schéma de builds flexible (`build_weapons`, `build_artifacts`, `build_main_stats`, `build_sub_stats`)
+- **Models** — PascalCase dès le départ, mapping Dapper automatique via `MatchNamesWithUnderscores`
+- **Repositories** — `IReferenceRepository` regroupant les entités simples (éléments, régions, types d'armes, rôles)
+- **Helpers** — `ImageHelper` et `CharacterHelper` centralisés dès le départ
+- **JS** — `site.js` partagé pour le thème et la modale, JS spécifique par vue uniquement
+- **UI** — sidebar de navigation, cartes horizontales, identité visuelle propre
 
 ---
 
