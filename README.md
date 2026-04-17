@@ -90,7 +90,7 @@ Créer une base PostgreSQL et exécuter les scripts SQL disponibles dans la docu
 dotnet run
 ```
 
-L'application est accessible sur `https://localhost:5001`.
+L'application est accessible sur `http://localhost:5401`.
 
 ---
 
