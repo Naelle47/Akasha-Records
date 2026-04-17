@@ -49,7 +49,7 @@ public class BuildRepository : IBuildRepository
         const string sqlWeapons = @"
             SELECT
                 bw.id, bw.build_id, bw.weapon_id, bw.priority, bw.note,
-                w.id, w.name, w.rarity, w.icon_url
+                w.id, w.name, w.rarity, w.passive_ability, w.icon_url
             FROM build_weapons bw
             JOIN weapons w ON bw.weapon_id = w.id
             WHERE bw.build_id = ANY(@BuildIds)

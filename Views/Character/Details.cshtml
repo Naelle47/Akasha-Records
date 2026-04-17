@@ -7,7 +7,7 @@
 
 <div class="details-page">
 
-        <div class="details-back">
+    <div class="details-back">
         <a asp-controller="Character" asp-action="Index" class="btn-ghost">
             <i class="fa-solid fa-arrow-left"></i>
             Retour aux personnages
@@ -89,7 +89,9 @@
                             <h3 class="build-section-title">Armes recommandées</h3>
                             @foreach (var bw in build.Weapons.OrderBy(w => w.Priority))
                             {
-                                <div class="build-weapon-row">
+                                <div class="build-weapon-row"
+                                     data-weapon-name="@bw.Weapon.Name"
+                                     data-weapon-passive="@bw.Weapon.PassiveAbility">
                                     <span class="build-priority">@bw.Priority</span>
                                     <img src="@ImageHelper.WeaponIcon(bw.Weapon.IconUrl)"
                                          alt="@bw.Weapon.Name"
@@ -102,7 +104,7 @@
                                     </div>
                                     @if (!string.IsNullOrEmpty(bw.Note))
                                     {
-                                        <span class="build-item-note">@bw.Note</span>
+                                        <span class="build-item-tag">@bw.Note</span>
                                     }
                                 </div>
                             }
@@ -111,14 +113,16 @@
                         @* Colonne droite : artefacts *@
                         <div class="build-section">
                             <h3 class="build-section-title">Sets d'artefacts</h3>
-
-                            @* Groupement par priorité *@
                             @foreach (var group in build.Artifacts.GroupBy(a => a.Priority).OrderBy(g => g.Key))
                             {
                                 <div class="build-artifact-group">
                                     @foreach (var ba in group.OrderBy(a => a.ComboGroup).ThenBy(a => a.ArtifactId))
                                     {
-                                        <div class="build-artifact-row">
+                                        <div class="build-artifact-row"
+                                             data-artifact-bonus="true"
+                                             data-artifact-name="@ba.Artifact.Name"
+                                             data-artifact-bonus2="@ba.Artifact.Bonus2Pc"
+                                             data-artifact-bonus4="@(ba.PieceCount == 4 ? ba.Artifact.Bonus4Pc : null)">
                                             <img src="@ImageHelper.ArtifactIcon(ba.Artifact.IconUrl)"
                                                  alt="@ba.Artifact.Name"
                                                  class="build-item-icon" />
@@ -177,3 +181,7 @@
     </section>
 
 </div>
+
+@section Scripts {
+    <script src="~/js/tooltip.js" asp-append-version="true"></script>
+}
