@@ -11,7 +11,7 @@
 - Schéma PostgreSQL complet : `elements`, `weapon_types`, `regions`, `characters`, `weapons`, `artifacts`, `character_roles`
 - Schéma de builds flexible : `builds`, `build_weapons`, `build_artifacts`, `build_main_stats`, `build_sub_stats`
 - Convention de nommage snake_case cohérente, clés primaires unifiées (`id`)
-- 107 personnages, 197 armes, 42 sets d'artefacts
+- 112 personnages, 197 armes, 42 sets d'artefacts
 
 ### Architecture
 - Models en PascalCase avec mapping Dapper automatique (`MatchNamesWithUnderscores`)
