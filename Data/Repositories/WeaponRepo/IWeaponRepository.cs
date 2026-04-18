@@ -8,6 +8,6 @@ namespace AkashaRecords.Data.Repositories.WeaponRepo;
 public interface IWeaponRepository
 {
     Task<int> GetCountAsync();
-    Task<IEnumerable<Weapon>> GetFilteredAsync(int? weaponTypeId, int? rarity);
+    Task<IEnumerable<Weapon>> GetFilteredAsync(int? weaponTypeId, int? rarity, string? source);
     Task<Weapon?> GetByIdAsync(int id);
 }

@@ -36,6 +36,38 @@
             </div>
         </div>
 
+        @* Source *@
+        <div class="filter-row">
+            <span class="filter-label">Source</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="@Model.Rarity"
+                   asp-route-source=""
+                   class="filter-chip rarity-chip @(Model.Source is null ? "active" : string.Empty)">*</a>
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="@Model.Rarity"
+                   asp-route-source="battle_pass"
+                   class="filter-chip rarity-chip @(Model.Source == "battle_pass" ? "active" : string.Empty)">Pass</a>
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="@Model.Rarity"
+                   asp-route-source="fishing"
+                   class="filter-chip rarity-chip @(Model.Source == "fishing" ? "active" : string.Empty)">Pêche</a>
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="@Model.Rarity"
+                   asp-route-source="craft"
+                   class="filter-chip rarity-chip @(Model.Source == "craft" ? "active" : string.Empty)">Craft</a>
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="@Model.Rarity"
+                   asp-route-source="event"
+                   class="filter-chip rarity-chip @(Model.Source == "event" ? "active" : string.Empty)">Événement</a>
+            </div>
+        </div>
+
         @* Types d'armes *@
         <div class="filter-row">
             <span class="filter-label">Type</span>

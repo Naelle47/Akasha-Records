@@ -24,17 +24,18 @@ public class WeaponRepository : IWeaponRepository
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Weapon>> GetFilteredAsync(int? weaponTypeId, int? rarity)
+    public async Task<IEnumerable<Weapon>> GetFilteredAsync(int? weaponTypeId, int? rarity, string? source)
     {
         const string sql = @"
-            SELECT
-                w.id, w.name, w.rarity, w.weapon_type_id, w.passive_ability, w.icon_url,
-                wt.id, wt.name, wt.icon_url
-            FROM weapons w
-            JOIN weapon_types wt ON w.weapon_type_id = wt.id
-            WHERE (@WeaponTypeId IS NULL OR w.weapon_type_id = @WeaponTypeId)
-              AND (@Rarity       IS NULL OR w.rarity = @Rarity)
-            ORDER BY w.rarity DESC, w.name ASC;";
+        SELECT
+            w.id, w.name, w.rarity, w.weapon_type_id, w.passive_ability, w.icon_url, w.source,
+            wt.id, wt.name, wt.icon_url
+        FROM weapons w
+        JOIN weapon_types wt ON w.weapon_type_id = wt.id
+        WHERE (@WeaponTypeId IS NULL OR w.weapon_type_id = @WeaponTypeId)
+          AND (@Rarity       IS NULL OR w.rarity = @Rarity)
+          AND (@Source       IS NULL OR w.source = @Source)
+        ORDER BY w.rarity DESC, w.name ASC;";
 
         return await _db.QueryAsync<Weapon, WeaponType, Weapon>(
             sql,
@@ -43,7 +44,7 @@ public class WeaponRepository : IWeaponRepository
                 weapon.WeaponType = weaponType;
                 return weapon;
             },
-            new { WeaponTypeId = weaponTypeId, Rarity = rarity },
+            new { WeaponTypeId = weaponTypeId, Rarity = rarity, Source = source },
             splitOn: "id"
         );
     }

@@ -12,6 +12,7 @@ public class Weapon
     public int WeaponTypeId { get; set; }
     public string? PassiveAbility { get; set; }
     public string? IconUrl { get; set; }
+    public string? Source { get; set; }
 
     // -------------------------
     // Propriété de navigation

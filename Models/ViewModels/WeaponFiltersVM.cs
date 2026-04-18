@@ -13,4 +13,5 @@ public class WeaponFiltersVM
 
     public int? WeaponTypeId { get; set; }
     public int? Rarity { get; set; }
+    public string? Source { get; set; }
 }
