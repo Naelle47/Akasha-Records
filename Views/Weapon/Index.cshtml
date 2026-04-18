@@ -1,0 +1,114 @@
+﻿@model AkashaRecords.Models.ViewModels.WeaponFiltersVM
+@using AkashaRecords.Helpers
+
+@{
+    ViewData["Title"] = "Armes";
+}
+
+<div class="characters-page">
+
+    <div class="characters-header">
+        <h1>Armes</h1>
+        <p>@Model.Weapons.Count arme(s) affichée(s)</p>
+    </div>
+
+    @* =====================
+       FILTRES
+       ===================== *@
+    <section class="character-filters">
+
+        @* Rareté *@
+        <div class="filter-row">
+            <span class="filter-label">Rareté</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity=""
+                   class="filter-chip rarity-chip @(Model.Rarity is null ? "active" : string.Empty)">*</a>
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="4"
+                   class="filter-chip rarity-chip @(Model.Rarity == 4 ? "active" : string.Empty)">4✦</a>
+                <a asp-action="Index"
+                   asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-rarity="5"
+                   class="filter-chip rarity-chip @(Model.Rarity == 5 ? "active" : string.Empty)">5✦</a>
+            </div>
+        </div>
+
+        @* Types d'armes *@
+        <div class="filter-row">
+            <span class="filter-label">Type</span>
+            <div class="filter-chips">
+                <a asp-action="Index"
+                   asp-route-weaponTypeId=""
+                   asp-route-rarity="@Model.Rarity"
+                   class="filter-chip @(Model.WeaponTypeId is null ? "active" : string.Empty)">*</a>
+                @foreach (var wt in Model.WeaponTypes)
+                {
+                    <a asp-action="Index"
+                           asp-route-weaponTypeId="@wt.Id"
+                           asp-route-rarity="@Model.Rarity"
+                           class="filter-chip @(Model.WeaponTypeId == wt.Id ? "active" : string.Empty)">
+                        <img src="@ImageHelper.WeaponTypeIcon(wt.IconUrl)" alt="@wt.Name" class="filter-icon" />
+                    </a>
+                }
+            </div>
+        </div>
+
+    </section>
+
+    @* =====================
+       GRILLE ARMES
+       ===================== *@
+    <div class="weapons-grid">
+        @foreach (var w in Model.Weapons)
+        {
+            <article class="weapon-card">
+                <img src="@ImageHelper.WeaponIcon(w.IconUrl)"
+                     alt="@w.Name"
+                     class="weapon-card-image" />
+
+                <div class="weapon-card-body">
+                    <div>
+                        <h2 class="weapon-name">@w.Name</h2>
+                        <div class="character-fields">
+
+                            <div class="field-row">
+                                <span class="field-label">Rareté</span>
+                                <span class="field-value">
+                                    <span class="rarity-badge @(w.Rarity == 5 ? "rarity-5" : w.Rarity == 4 ? "rarity-4" : "rarity-3")">
+                                        @CharacterHelper.RarityStars(w.Rarity)
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="field-row">
+                                <span class="field-label">Type</span>
+                                <span class="field-value">
+                                    @if (w.WeaponType != null)
+                                    {
+                                        <img src="@ImageHelper.WeaponTypeIcon(w.WeaponType.IconUrl)"
+                                             alt="@w.WeaponType.Name" class="filter-icon" />
+                                        @w.WeaponType.Name
+                                    }
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="character-card-footer">
+                        <a asp-controller="Weapon"
+                               asp-action="Details"
+                               asp-route-id="@w.Id"
+                               class="btn-primary-sm">
+                            Voir la fiche
+                        </a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+
+</div>

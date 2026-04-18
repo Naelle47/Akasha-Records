@@ -55,7 +55,13 @@
                     <i class="fa-solid fa-users"></i>
                     <span>Personnages</span>
                 </a>
+                <a asp-controller="Weapon" asp-action="Index"
+                       class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Weapon" ? "active" : "")">
+                    <i class="fa-solid fa-shield"></i>
+                    <span>Armes</span>
+                </a>
             </nav>
+
 
             @* Footer sidebar *@
             <div class="sidebar-footer">

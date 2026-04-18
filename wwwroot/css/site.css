@@ -947,6 +947,11 @@ body {
     font-weight: 600;
 }
 
+.rarity-3 {
+    color: #4a9dd4;
+    background-color: rgba(74, 157, 212, 0.15);
+}
+
 .rarity-4 {
     color: #b47fe6;
     background-color: rgba(180, 127, 230, 0.15);
@@ -1097,4 +1102,108 @@ body {
     .main {
         padding: 1.5rem 1.25rem 2rem;
     }
+}
+
+/* ============================================================
+   18. Armes
+   ============================================================ */
+
+.weapons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    gap: 1rem;
+}
+
+.weapon-card {
+    background: var(--bg-elevated);
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+    .weapon-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.28);
+        border-color: var(--accent);
+    }
+
+.weapon-card-image {
+    width: 160px;
+    height: 160px;
+    object-fit: contain;
+    flex-shrink: 0;
+    padding: 0.5rem;
+}
+
+.weapon-card-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    min-width: 0;
+}
+
+.weapon-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+.weapon-passive-preview {
+    margin-top: 4px;
+}
+
+.weapon-passive-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.weapon-details-image {
+    width: 128px;
+    height: 128px;
+    object-fit: contain;
+    border-radius: 10px;
+    flex-shrink: 0;
+    padding: 0.5rem;
+    background: var(--bg);
+}
+
+.weapon-passive-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.weapon-passive-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .weapon-passive-title i {
+        font-size: 0.9rem;
+    }
+
+.weapon-passive-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.7;
 }

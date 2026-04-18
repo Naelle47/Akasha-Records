@@ -1,0 +1,59 @@
+﻿@model AkashaRecords.Models.ProjectModels.Weapon
+@using AkashaRecords.Helpers
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="details-page">
+
+    <div class="details-back">
+        <a asp-controller="Weapon" asp-action="Index" class="btn-ghost">
+            <i class="fa-solid fa-arrow-left"></i>
+            Retour aux armes
+        </a>
+    </div>
+
+    @* =====================
+       EN-TÊTE ARME
+       ===================== *@
+    <div class="details-header">
+        <img src="@ImageHelper.WeaponIcon(Model.IconUrl)"
+             alt="@Model.Name"
+             class="weapon-details-image" />
+
+        <div class="details-character-info">
+            <h1 class="details-character-name">@Model.Name</h1>
+            <div class="details-character-meta">
+                <span class="rarity-badge @(Model.Rarity == 5 ? "rarity-5" : Model.Rarity == 4 ? "rarity-4" : "rarity-3")">
+                    @CharacterHelper.RarityStars(Model.Rarity)
+                </span>
+                @if (Model.WeaponType != null)
+                {
+                    <span class="details-meta-item">
+                        <img src="@ImageHelper.WeaponTypeIcon(Model.WeaponType.IconUrl)"
+                             alt="@Model.WeaponType.Name" class="filter-icon" />
+                        @Model.WeaponType.Name
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* =====================
+       PASSIVE
+       ===================== *@
+    @if (!string.IsNullOrEmpty(Model.PassiveAbility))
+    {
+        <div class="weapon-passive-card">
+            <h2 class="weapon-passive-title">
+                <i class="fa-solid fa-bolt"></i>
+                @Model.PassiveAbility.Split(':')[0]
+            </h2>
+            <p class="weapon-passive-desc">
+                @string.Join(":", Model.PassiveAbility.Split(':').Skip(1)).Trim()
+            </p>
+        </div>
+    }
+
+</div>
