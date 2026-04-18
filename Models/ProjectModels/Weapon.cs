@@ -13,6 +13,7 @@ public class Weapon
     public string? PassiveAbility { get; set; }
     public string? IconUrl { get; set; }
     public string? Source { get; set; }
+    public string? Series { get; set; }
 
     // -------------------------
     // Propriété de navigation

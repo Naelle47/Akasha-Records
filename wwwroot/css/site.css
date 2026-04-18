@@ -1177,7 +1177,6 @@ body {
     border-radius: 10px;
     flex-shrink: 0;
     padding: 0.5rem;
-    background: var(--bg);
 }
 
 .weapon-passive-card {

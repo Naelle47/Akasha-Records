@@ -28,8 +28,8 @@ public class WeaponRepository : IWeaponRepository
     {
         const string sql = @"
         SELECT
-            w.id, w.name, w.rarity, w.weapon_type_id, w.passive_ability, w.icon_url, w.source,
-            wt.id, wt.name, wt.icon_url
+                w.id, w.name, w.rarity, w.weapon_type_id, w.passive_ability, w.icon_url, w.source, w.series,
+                wt.id, wt.name, wt.icon_url
         FROM weapons w
         JOIN weapon_types wt ON w.weapon_type_id = wt.id
         WHERE (@WeaponTypeId IS NULL OR w.weapon_type_id = @WeaponTypeId)

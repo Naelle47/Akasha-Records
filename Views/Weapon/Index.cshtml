@@ -23,14 +23,17 @@
             <div class="filter-chips">
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-source="@Model.Source"
                    asp-route-rarity=""
                    class="filter-chip rarity-chip @(Model.Rarity is null ? "active" : string.Empty)">*</a>
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-source="@Model.Source"
                    asp-route-rarity="4"
                    class="filter-chip rarity-chip @(Model.Rarity == 4 ? "active" : string.Empty)">4✦</a>
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
+                   asp-route-source="@Model.Source"
                    asp-route-rarity="5"
                    class="filter-chip rarity-chip @(Model.Rarity == 5 ? "active" : string.Empty)">5✦</a>
             </div>
@@ -75,12 +78,14 @@
                 <a asp-action="Index"
                    asp-route-weaponTypeId=""
                    asp-route-rarity="@Model.Rarity"
+                   asp-route-source="@Model.Source"
                    class="filter-chip @(Model.WeaponTypeId is null ? "active" : string.Empty)">*</a>
                 @foreach (var wt in Model.WeaponTypes)
                 {
                     <a asp-action="Index"
                            asp-route-weaponTypeId="@wt.Id"
                            asp-route-rarity="@Model.Rarity"
+                           asp-route-source="@Model.Source"
                            class="filter-chip @(Model.WeaponTypeId == wt.Id ? "active" : string.Empty)">
                         <img src="@ImageHelper.WeaponTypeIcon(wt.IconUrl)" alt="@wt.Name" class="filter-icon" />
                     </a>
@@ -126,6 +131,14 @@
                                     }
                                 </span>
                             </div>
+
+                            @if (!string.IsNullOrEmpty(w.Series))
+                            {
+                                <div class="field-row">
+                                    <span class="field-label">Série</span>
+                                    <span class="field-value">@w.Series</span>
+                                </div>
+                            }
 
                         </div>
                     </div>
