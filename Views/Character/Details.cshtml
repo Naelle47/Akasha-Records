@@ -82,6 +82,33 @@
                         <span class="build-role">@build.Role.Name</span>
                     </div>
 
+                    @* Stats à viser *@
+                    @if (!string.IsNullOrEmpty(build.StatThresholds) || !string.IsNullOrEmpty(build.StatGoals))
+                    {
+                        <div class="build-targets">
+                            @if (!string.IsNullOrEmpty(build.StatGoals))
+                            {
+                                <div class="build-target-row">
+                                    <span class="build-target-label">
+                                        <i class="fa-solid fa-bullseye"></i>
+                                        Stats à atteindre
+                                    </span>
+                                    <span class="build-target-value">@build.StatGoals</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(build.StatThresholds))
+                            {
+                                <div class="build-target-row">
+                                    <span class="build-target-label">
+                                        <i class="fa-solid fa-sliders"></i>
+                                        Seuils à viser
+                                    </span>
+                                    <span class="build-target-value">@build.StatThresholds</span>
+                                </div>
+                            }
+                        </div>
+                    }
+
                     <div class="build-card-body">
 
                         @* Colonne gauche : armes *@
@@ -174,33 +201,6 @@
                         </div>
 
                     </div>
-
-                    @* Stats à viser *@
-                    @if (!string.IsNullOrEmpty(build.StatThresholds) || !string.IsNullOrEmpty(build.StatGoals))
-                    {
-                        <div class="build-targets">
-                            @if (!string.IsNullOrEmpty(build.StatGoals))
-                            {
-                                <div class="build-target-row">
-                                    <span class="build-target-label">
-                                        <i class="fa-solid fa-bullseye"></i>
-                                        Stats à atteindre
-                                    </span>
-                                    <span class="build-target-value">@build.StatGoals</span>
-                                </div>
-                            }
-                            @if (!string.IsNullOrEmpty(build.StatThresholds))
-                            {
-                                <div class="build-target-row">
-                                    <span class="build-target-label">
-                                        <i class="fa-solid fa-sliders"></i>
-                                        Seuils à viser
-                                    </span>
-                                    <span class="build-target-value">@build.StatThresholds</span>
-                                </div>
-                            }
-                        </div>
-                    }
 
                     @* Disclaimer *@
                     <div class="build-disclaimer">
