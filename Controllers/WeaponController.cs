@@ -22,17 +22,19 @@ public class WeaponController : Controller
     }
 
     /// <summary>
-    /// Catalogue des armes avec filtres par type et rareté.
+    /// Catalogue des armes avec filtres par type, rareté, source, recherche et lettre.
     /// </summary>
-    public async Task<IActionResult> Index(int? weaponTypeId, int? rarity, string? source)
+    public async Task<IActionResult> Index(int? weaponTypeId, int? rarity, string? source, string? search, string? letter)
     {
         var vm = new WeaponFiltersVM
         {
-            Weapons = (await _weaponRepo.GetFilteredAsync(weaponTypeId, rarity, source)).ToList(),
+            Weapons = (await _weaponRepo.GetFilteredAsync(weaponTypeId, rarity, source, search, letter)).ToList(),
             WeaponTypes = (await _referenceRepo.GetAllWeaponTypesAsync()).ToList(),
             WeaponTypeId = weaponTypeId,
             Rarity = rarity,
-            Source = source
+            Source = source,
+            Search = search,
+            Letter = letter
         };
 
         return View(vm);

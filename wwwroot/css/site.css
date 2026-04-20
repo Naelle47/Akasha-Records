@@ -1206,3 +1206,60 @@ body {
     color: var(--text-muted);
     line-height: 1.7;
 }
+
+/* ========== Search ========== */
+.search-form {
+    margin-bottom: 0.75rem;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    transition: border-color 0.15s;
+}
+
+    .search-bar:focus-within {
+        border-color: var(--accent);
+    }
+
+    .search-bar i {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    outline: none;
+}
+
+    .search-input::placeholder {
+        color: var(--text-muted);
+    }
+
+.search-clear {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+    .search-clear:hover {
+        color: var(--text-main);
+    }
+
+/* ========== Weapon alpha nav ========== */
+.alpha-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+}

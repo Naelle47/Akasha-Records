@@ -33,20 +33,20 @@ public class CharacterController : Controller
     /// <param name="weaponTypeId">Identifiant du type d'arme (Sword, Bow, etc.).</param>
     /// <param name="regionId">Identifiant de la région d'origine.</param>
     /// <param name="rarity">Rareté du personnage (4 ou 5 étoiles).</param>
-    public async Task<IActionResult> Index(int? elementId, int? weaponTypeId, int? regionId, int? rarity)
+    public async Task<IActionResult> Index(int? elementId, int? weaponTypeId, int? regionId, int? rarity, string? search, string? letter)
     {
-        var characters = await _characterRepo.GetFilteredAsync(elementId, weaponTypeId, regionId, rarity);
-
         var vm = new CharacterFiltersVM
         {
+            Characters = (await _characterRepo.GetFilteredAsync(elementId, weaponTypeId, regionId, rarity, search, letter)).ToList(),
+            Elements = (await _referenceRepo.GetAllElementsAsync()).ToList(),
+            WeaponTypes = (await _referenceRepo.GetAllWeaponTypesAsync()).ToList(),
+            Regions = (await _referenceRepo.GetAllRegionsAsync()).ToList(),
             ElementId = elementId,
             WeaponTypeId = weaponTypeId,
             RegionId = regionId,
             Rarity = rarity,
-            Elements = await _referenceRepo.GetAllElementsAsync(),
-            WeaponTypes = await _referenceRepo.GetAllWeaponTypesAsync(),
-            Regions = await _referenceRepo.GetAllRegionsAsync(),
-            Characters = characters.ToList()
+            Search = search,
+            Letter = letter
         };
 
         return View(vm);

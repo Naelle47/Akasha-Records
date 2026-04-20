@@ -17,6 +17,8 @@ public class CharacterFiltersVM
     public int? WeaponTypeId { get; set; }
     public int? RegionId { get; set; }
     public int? Rarity { get; set; }
+    public string? Search { get; set; }
+    public string? Letter { get; set; }
 
     // -------------------------
     // Données pour alimenter les listes déroulantes

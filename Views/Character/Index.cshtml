@@ -3,6 +3,14 @@
 
 @{
     ViewData["Title"] = "Personnages";
+    var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    var allRarityClass = "filter-chip rarity-chip" + (Model.Rarity is null ? " active" : "");
+    var rarity4Class = "filter-chip rarity-chip" + (Model.Rarity == 4 ? " active" : "");
+    var rarity5Class = "filter-chip rarity-chip" + (Model.Rarity == 5 ? " active" : "");
+    var allLetterClass = "filter-chip" + (Model.Letter is null ? " active" : "");
+    var allElementClass = "filter-chip" + (Model.ElementId is null ? " active" : "");
+    var allWeaponTypeClass = "filter-chip" + (Model.WeaponTypeId is null ? " active" : "");
+    var allRegionClass = "filter-chip" + (Model.RegionId is null ? " active" : "");
 }
 
 <div class="characters-page">
@@ -12,12 +20,56 @@
         <p>@Model.Characters.Count personnage(s) affiché(s)</p>
     </div>
 
-    @* =====================
-       FILTRES
-       ===================== *@
+    <form asp-action="Index" method="get" class="search-form">
+        <input type="hidden" name="elementId" value="@Model.ElementId" />
+        <input type="hidden" name="weaponTypeId" value="@Model.WeaponTypeId" />
+        <input type="hidden" name="regionId" value="@Model.RegionId" />
+        <input type="hidden" name="rarity" value="@Model.Rarity" />
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text"
+                   name="search"
+                   value="@Model.Search"
+                   placeholder="Rechercher un personnage..."
+                   class="search-input"
+                   autocomplete="off" />
+            @if (!string.IsNullOrEmpty(Model.Search))
+            {
+                <a asp-action="Index"
+                       asp-route-elementId="@Model.ElementId"
+                       asp-route-weaponTypeId="@Model.WeaponTypeId"
+                       asp-route-regionId="@Model.RegionId"
+                       asp-route-rarity="@Model.Rarity"
+                       class="search-clear">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            }
+        </div>
+    </form>
+
+    <div class="alpha-nav">
+        <a asp-action="Index"
+           asp-route-elementId="@Model.ElementId"
+           asp-route-weaponTypeId="@Model.WeaponTypeId"
+           asp-route-regionId="@Model.RegionId"
+           asp-route-rarity="@Model.Rarity"
+           asp-route-letter=""
+           class="@allLetterClass">*</a>
+        @foreach (var l in letters)
+        {
+            var lClass = "filter-chip" + (Model.Letter == l.ToString() ? " active" : "");
+            <a asp-action="Index"
+               asp-route-elementId="@Model.ElementId"
+               asp-route-weaponTypeId="@Model.WeaponTypeId"
+               asp-route-regionId="@Model.RegionId"
+               asp-route-rarity="@Model.Rarity"
+               asp-route-letter="@l"
+               class="@lClass">@l</a>
+        }
+    </div>
+
     <section class="character-filters">
 
-        @* Rareté *@
         <div class="filter-row">
             <span class="filter-label">Rareté</span>
             <div class="filter-chips">
@@ -25,24 +77,26 @@
                    asp-route-elementId="@Model.ElementId"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-regionId="@Model.RegionId"
+                   asp-route-letter="@Model.Letter"
                    asp-route-rarity=""
-                   class="filter-chip rarity-chip @(Model.Rarity is null ? "active" : string.Empty)">*</a>
+                   class="@allRarityClass">*</a>
                 <a asp-action="Index"
                    asp-route-elementId="@Model.ElementId"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-regionId="@Model.RegionId"
+                   asp-route-letter="@Model.Letter"
                    asp-route-rarity="4"
-                   class="filter-chip rarity-chip @(Model.Rarity == 4 ? "active" : string.Empty)">4✦</a>
+                   class="@rarity4Class">4✦</a>
                 <a asp-action="Index"
                    asp-route-elementId="@Model.ElementId"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-regionId="@Model.RegionId"
+                   asp-route-letter="@Model.Letter"
                    asp-route-rarity="5"
-                   class="filter-chip rarity-chip @(Model.Rarity == 5 ? "active" : string.Empty)">5✦</a>
+                   class="@rarity5Class">5✦</a>
             </div>
         </div>
 
-        @* Éléments *@
         <div class="filter-row">
             <span class="filter-label">Élément</span>
             <div class="filter-chips">
@@ -51,22 +105,24 @@
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-regionId="@Model.RegionId"
                    asp-route-rarity="@Model.Rarity"
-                   class="filter-chip @(Model.ElementId is null ? "active" : string.Empty)">*</a>
+                   asp-route-letter="@Model.Letter"
+                   class="@allElementClass">*</a>
                 @foreach (var e in Model.Elements)
                 {
+                    var eClass = "filter-chip" + (Model.ElementId == e.Id ? " active" : "");
                     <a asp-action="Index"
                            asp-route-elementId="@e.Id"
                            asp-route-weaponTypeId="@Model.WeaponTypeId"
                            asp-route-regionId="@Model.RegionId"
                            asp-route-rarity="@Model.Rarity"
-                           class="filter-chip @(Model.ElementId == e.Id ? "active" : string.Empty)">
+                           asp-route-letter="@Model.Letter"
+                           class="@eClass">
                         <img src="@ImageHelper.ElementIcon(e.IconUrl)" alt="@e.Name" class="filter-icon" />
                     </a>
                 }
             </div>
         </div>
 
-        @* Types d'armes *@
         <div class="filter-row">
             <span class="filter-label">Arme</span>
             <div class="filter-chips">
@@ -75,22 +131,24 @@
                    asp-route-weaponTypeId=""
                    asp-route-regionId="@Model.RegionId"
                    asp-route-rarity="@Model.Rarity"
-                   class="filter-chip @(Model.WeaponTypeId is null ? "active" : string.Empty)">*</a>
+                   asp-route-letter="@Model.Letter"
+                   class="@allWeaponTypeClass">*</a>
                 @foreach (var w in Model.WeaponTypes)
                 {
+                    var wClass = "filter-chip" + (Model.WeaponTypeId == w.Id ? " active" : "");
                     <a asp-action="Index"
                            asp-route-elementId="@Model.ElementId"
                            asp-route-weaponTypeId="@w.Id"
                            asp-route-regionId="@Model.RegionId"
                            asp-route-rarity="@Model.Rarity"
-                           class="filter-chip @(Model.WeaponTypeId == w.Id ? "active" : string.Empty)">
+                           asp-route-letter="@Model.Letter"
+                           class="@wClass">
                         <img src="@ImageHelper.WeaponTypeIcon(w.IconUrl)" alt="@w.Name" class="filter-icon" />
                     </a>
                 }
             </div>
         </div>
 
-        @* Régions *@
         <div class="filter-row">
             <span class="filter-label">Région</span>
             <div class="filter-chips">
@@ -99,15 +157,18 @@
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-regionId=""
                    asp-route-rarity="@Model.Rarity"
-                   class="filter-chip @(Model.RegionId is null ? "active" : string.Empty)">*</a>
+                   asp-route-letter="@Model.Letter"
+                   class="@allRegionClass">*</a>
                 @foreach (var r in Model.Regions)
                 {
+                    var rClass = "filter-chip" + (Model.RegionId == r.Id ? " active" : "");
                     <a asp-action="Index"
                            asp-route-elementId="@Model.ElementId"
                            asp-route-weaponTypeId="@Model.WeaponTypeId"
                            asp-route-regionId="@r.Id"
                            asp-route-rarity="@Model.Rarity"
-                           class="filter-chip @(Model.RegionId == r.Id ? "active" : string.Empty)">
+                           asp-route-letter="@Model.Letter"
+                           class="@rClass">
                         <img src="@ImageHelper.RegionIcon(r.IconUrl)" alt="@r.Name" class="filter-icon" />
                     </a>
                 }
@@ -116,12 +177,10 @@
 
     </section>
 
-    @* =====================
-       GRILLE PERSONNAGES
-       ===================== *@
     <div class="characters-grid">
         @foreach (var c in Model.Characters)
         {
+            var rarityClass = "rarity-badge " + (c.Rarity == 5 ? "rarity-5" : "rarity-4");
             <article class="character-card">
                 <img src="@ImageHelper.CharacterIcon(c.IconUrl)"
                      alt="@c.Name"
@@ -135,7 +194,7 @@
                             <div class="field-row">
                                 <span class="field-label">Rareté</span>
                                 <span class="field-value">
-                                    <span class="rarity-badge @(c.Rarity == 5 ? "rarity-5" : "rarity-4")">
+                                    <span class="@rarityClass">
                                         @CharacterHelper.RarityStars(c.Rarity)
                                     </span>
                                 </span>
@@ -152,7 +211,7 @@
                                     }
                                     else
                                     {
-                                        @:N/A
+                                        <span>N/A</span>
                                     }
                                 </span>
                             </div>
@@ -168,7 +227,7 @@
                                     }
                                     else
                                     {
-                                        @:N/A
+                                        <span>N/A</span>
                                     }
                                 </span>
                             </div>
@@ -184,7 +243,7 @@
                                     }
                                     else
                                     {
-                                        @:N/A
+                                        <span>N/A</span>
                                     }
                                 </span>
                             </div>

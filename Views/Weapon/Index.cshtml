@@ -3,6 +3,14 @@
 
 @{
     ViewData["Title"] = "Armes";
+
+    var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+    var allLetterClass = "filter-chip" + (Model.Letter is null ? " active" : "");
+    var allRarityClass = "filter-chip rarity-chip" + (Model.Rarity is null ? " active" : "");
+    var rarity4Class = "filter-chip rarity-chip" + (Model.Rarity == 4 ? " active" : "");
+    var rarity5Class = "filter-chip rarity-chip" + (Model.Rarity == 5 ? " active" : "");
+    var allSourceClass = "filter-chip rarity-chip" + (Model.Source is null ? " active" : "");
+    var allWeaponTypeClass = "filter-chip" + (Model.WeaponTypeId is null ? " active" : "");
 }
 
 <div class="characters-page">
@@ -12,66 +20,119 @@
         <p>@Model.Weapons.Count arme(s) affichée(s)</p>
     </div>
 
-    @* =====================
-       FILTRES
-       ===================== *@
+    <form asp-action="Index" method="get" class="search-form">
+        <input type="hidden" name="weaponTypeId" value="@Model.WeaponTypeId" />
+        <input type="hidden" name="rarity" value="@Model.Rarity" />
+        <input type="hidden" name="source" value="@Model.Source" />
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text"
+                   name="search"
+                   value="@Model.Search"
+                   placeholder="Rechercher une arme..."
+                   class="search-input"
+                   autocomplete="off" />
+            @if (!string.IsNullOrEmpty(Model.Search))
+            {
+                <a asp-action="Index"
+                       asp-route-weaponTypeId="@Model.WeaponTypeId"
+                       asp-route-rarity="@Model.Rarity"
+                       asp-route-source="@Model.Source"
+                       class="search-clear">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            }
+        </div>
+    </form>
+
+    <div class="alpha-nav">
+        <a asp-action="Index"
+           asp-route-weaponTypeId="@Model.WeaponTypeId"
+           asp-route-rarity="@Model.Rarity"
+           asp-route-source="@Model.Source"
+           asp-route-letter=""
+           class="@allLetterClass">*</a>
+
+        @foreach (var l in letters)
+        {
+            var lClass = "filter-chip" + (Model.Letter == l.ToString() ? " active" : "");
+            <a asp-action="Index"
+               asp-route-weaponTypeId="@Model.WeaponTypeId"
+               asp-route-rarity="@Model.Rarity"
+               asp-route-source="@Model.Source"
+               asp-route-letter="@l"
+               class="@lClass">@l</a>
+        }
+    </div>
+
     <section class="character-filters">
 
-        @* Rareté *@
         <div class="filter-row">
             <span class="filter-label">Rareté</span>
             <div class="filter-chips">
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-source="@Model.Source"
+                   asp-route-letter="@Model.Letter"
                    asp-route-rarity=""
-                   class="filter-chip rarity-chip @(Model.Rarity is null ? "active" : string.Empty)">*</a>
+                   class="@allRarityClass">*</a>
+
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-source="@Model.Source"
+                   asp-route-letter="@Model.Letter"
                    asp-route-rarity="4"
-                   class="filter-chip rarity-chip @(Model.Rarity == 4 ? "active" : string.Empty)">4✦</a>
+                   class="@rarity4Class">4✦</a>
+
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-source="@Model.Source"
+                   asp-route-letter="@Model.Letter"
                    asp-route-rarity="5"
-                   class="filter-chip rarity-chip @(Model.Rarity == 5 ? "active" : string.Empty)">5✦</a>
+                   class="@rarity5Class">5✦</a>
             </div>
         </div>
 
-        @* Source *@
         <div class="filter-row">
             <span class="filter-label">Source</span>
             <div class="filter-chips">
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-rarity="@Model.Rarity"
+                   asp-route-letter="@Model.Letter"
                    asp-route-source=""
-                   class="filter-chip rarity-chip @(Model.Source is null ? "active" : string.Empty)">*</a>
+                   class="@allSourceClass">*</a>
+
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-rarity="@Model.Rarity"
+                   asp-route-letter="@Model.Letter"
                    asp-route-source="battle_pass"
-                   class="filter-chip rarity-chip @(Model.Source == "battle_pass" ? "active" : string.Empty)">Pass</a>
+                   class="filter-chip rarity-chip @(Model.Source == "battle_pass" ? " active" : "")">Pass</a>
+
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-rarity="@Model.Rarity"
+                   asp-route-letter="@Model.Letter"
                    asp-route-source="fishing"
-                   class="filter-chip rarity-chip @(Model.Source == "fishing" ? "active" : string.Empty)">Pêche</a>
+                   class="filter-chip rarity-chip @(Model.Source == "fishing" ? " active" : "")">Pêche</a>
+
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-rarity="@Model.Rarity"
+                   asp-route-letter="@Model.Letter"
                    asp-route-source="craft"
-                   class="filter-chip rarity-chip @(Model.Source == "craft" ? "active" : string.Empty)">Craft</a>
+                   class="filter-chip rarity-chip @(Model.Source == "craft" ? " active" : "")">Craft</a>
+
                 <a asp-action="Index"
                    asp-route-weaponTypeId="@Model.WeaponTypeId"
                    asp-route-rarity="@Model.Rarity"
+                   asp-route-letter="@Model.Letter"
                    asp-route-source="event"
-                   class="filter-chip rarity-chip @(Model.Source == "event" ? "active" : string.Empty)">Événement</a>
+                   class="filter-chip rarity-chip @(Model.Source == "event" ? " active" : "")">Événement</a>
             </div>
         </div>
 
-        @* Types d'armes *@
         <div class="filter-row">
             <span class="filter-label">Type</span>
             <div class="filter-chips">
@@ -79,14 +140,18 @@
                    asp-route-weaponTypeId=""
                    asp-route-rarity="@Model.Rarity"
                    asp-route-source="@Model.Source"
-                   class="filter-chip @(Model.WeaponTypeId is null ? "active" : string.Empty)">*</a>
+                   asp-route-letter="@Model.Letter"
+                   class="@allWeaponTypeClass">*</a>
+
                 @foreach (var wt in Model.WeaponTypes)
                 {
+                    var wtClass = "filter-chip" + (Model.WeaponTypeId == wt.Id ? " active" : "");
                     <a asp-action="Index"
                            asp-route-weaponTypeId="@wt.Id"
                            asp-route-rarity="@Model.Rarity"
                            asp-route-source="@Model.Source"
-                           class="filter-chip @(Model.WeaponTypeId == wt.Id ? "active" : string.Empty)">
+                           asp-route-letter="@Model.Letter"
+                           class="@wtClass">
                         <img src="@ImageHelper.WeaponTypeIcon(wt.IconUrl)" alt="@wt.Name" class="filter-icon" />
                     </a>
                 }
@@ -95,9 +160,6 @@
 
     </section>
 
-    @* =====================
-       GRILLE ARMES
-       ===================== *@
     <div class="weapons-grid">
         @foreach (var w in Model.Weapons)
         {
